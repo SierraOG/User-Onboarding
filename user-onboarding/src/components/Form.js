@@ -41,8 +41,12 @@ const FormikLoginForm = withFormik({
     email: Yup.string()
       .email("Email not valid")
       .required("Email is required"),
+    name: Yup.string()
+      .min(1, 'Too short, enter full name')
+      .max(50, 'Too long')
+      .required("Name is required"),
     password: Yup.string()
-      .min(16, "Password must be 16 characters or longer")
+      .min(8, "Password must be 16 characters or longer")
       .required("Password is required")
   }),
   handleSubmit(values, { resetForm, setErrors, setSubmitting }) {
@@ -53,6 +57,7 @@ const FormikLoginForm = withFormik({
         .post(" https://reqres.in/api/users", values)
         .then(res => {
           console.log(res); // Data was created successfully and logs to console
+          window.alert(`Successful submit: email: ${res.data.email}, name: ${res.data.name} `)
           resetForm();
           setSubmitting(false);
         })
