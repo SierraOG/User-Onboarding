@@ -13,17 +13,31 @@ function LoginForm({ values, errors, touched, isSubmitting }) {
         {touched.email && errors.email && <p>{errors.email}</p>}
         <Field type="email" name="email" placeholder="Email" />
       </div>
-      <div>
-        {touched.name && errors.name && <p>{errors.name}</p>}
-        <Field name="name" placeholder="Name" />
+      <div style={{display: 'flex', justifyContent: 'space-between'}}>
+        <div style={{width: '47%'}}>
+          {touched.firstName && errors.firstName && <p>{errors.firstName}</p>}
+          <Field name="firstName" placeholder="First Name" />
+        </div>
+        <div style={{width: '47%'}}>
+          {touched.lastName && errors.lastName && <p>{errors.lastName}</p>}
+          <Field name="lastName" placeholder="Last Name" />
+        </div>
       </div>
       <div>
         {touched.password && errors.password && <p>{errors.password}</p>}
         <Field type="password" name="password" placeholder="Password" />
       </div>
+      <div style = {{display:'flex', justifyContent: 'space-between'}}>
+        <h4>Select shirt size</h4>
+        <Field style = {{height: '30px', alignSelf: 'center', width: '40%', padding: '0'}}component="select" name="shirt">
+          <option value="small">Small</option>
+          <option value="medium">Medium</option>
+          <option value="large">Large</option>
+        </Field>
+      </div>
       <label style ={{color: 'white', display: 'flex'}}>
         <Field style={{width: '15px', boxShadow: 'none'}} type="checkbox" name="tos" checked={values.tos} />
-        Accept our Terms of Service
+        I accept the Terms of Service
       </label>
       <button className="btn btn-primary btn-block btn-large" disabled={isSubmitting}>Submit</button>
     </Form>
@@ -32,27 +46,32 @@ function LoginForm({ values, errors, touched, isSubmitting }) {
 }
 
 const FormikLoginForm = withFormik({
-  mapPropsToValues({ email, name, password, tos }) {
+  mapPropsToValues({ email, firstName, lastName, password, tos, shirt }) {
     return {
       email: email || "",
-      name: name || "",
+      firstName: firstName || "",
+      lastName: lastName || "",
       password: password || "",
       tos: tos || false,
+      shirt: shirt || "medium"
     };
   },
   validationSchema: Yup.object().shape({
     email: Yup.string()
       .email("Email not valid")
       .required("Email is required"),
-    name: Yup.string()
+    firstName: Yup.string()
       .max(50, 'Too long, 50 character maximum reached')
-      .required("Name is required"),
+      .required("First name is required"),
+    lastName: Yup.string()
+      .max(50, 'Too long, 50 character maximum reached')
+      .required("Last name is required"),
     password: Yup.string()
       .min(8, "Password must be 8 characters or longer")
       .required("Password is required"),
   }),
   handleSubmit(values, { resetForm, setErrors, setSubmitting }) {
-    if (values.email === "alreadytaken@atb.dev") {
+    if (values.email === "waffle@syrup.com") {
       setErrors({ email: "That email is already taken" });
     } else {
       axios
