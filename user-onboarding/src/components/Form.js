@@ -6,6 +6,8 @@ import axios from "axios";
 
 function LoginForm({ values, errors, touched, isSubmitting }) {
   return (
+    <div className='login'>
+      <h1>Sign up</h1>
     <Form>
       <div>
         {touched.email && errors.email && <p>{errors.email}</p>}
@@ -13,23 +15,24 @@ function LoginForm({ values, errors, touched, isSubmitting }) {
       </div>
       <div>
         {touched.name && errors.name && <p>{errors.name}</p>}
-        <Field type="name" name="name" placeholder="Name" />
+        <Field name="name" placeholder="Name" />
       </div>
       <div>
         {touched.password && errors.password && <p>{errors.password}</p>}
         <Field type="password" name="password" placeholder="Password" />
       </div>
-      <label>
-        <Field type="checkbox" name="tos" checked={values.tos} />
-        Accept TOS
+      <label style ={{color: 'white', display: 'flex'}}>
+        <Field style={{width: '15px', boxShadow: 'none'}} type="checkbox" name="tos" checked={values.tos} />
+        Accept our Terms of Service
       </label>
-      <button disabled={isSubmitting}>Submit</button>
+      <button className="btn btn-primary btn-block btn-large" disabled={isSubmitting}>Submit</button>
     </Form>
+    </div>
   );
 }
 
 const FormikLoginForm = withFormik({
-  mapPropsToValues({ email, password, tos, name }) {
+  mapPropsToValues({ email, name, password, tos }) {
     return {
       email: email || "",
       name: name || "",
@@ -42,12 +45,11 @@ const FormikLoginForm = withFormik({
       .email("Email not valid")
       .required("Email is required"),
     name: Yup.string()
-      .min(1, 'Too short, enter full name')
-      .max(50, 'Too long')
+      .max(50, 'Too long, 50 character maximum reached')
       .required("Name is required"),
     password: Yup.string()
-      .min(8, "Password must be 16 characters or longer")
-      .required("Password is required")
+      .min(8, "Password must be 8 characters or longer")
+      .required("Password is required"),
   }),
   handleSubmit(values, { resetForm, setErrors, setSubmitting }) {
     if (values.email === "alreadytaken@atb.dev") {
